@@ -265,7 +265,7 @@ class _Create2(object):
             115200:11
             }
         if baudRate in baud_dict:
-            self.SCI.send(self.config.data['opcodes']['baud'], tuple(baud_dict[baudRate],))
+            self.SCI.send(self.config.data['opcodes']['baud'], (baud_dict[baudRate],))
         else:
             raise _ROIDataByteError("Invalid buad rate")
     
