@@ -189,7 +189,7 @@ class _SerialCommandInterface(object):
         else:
             #Add the opcodes and data together
             bytes = temp_opcode + data
-        bytes = tuple([int(b) for b in bytes])
+        bytes = ([int(b) for b in bytes],)
         self.ser.write(struct.pack('B' * len(bytes), *bytes))
     
     def Read(self, num_bytes):
@@ -345,7 +345,7 @@ class _Create2(object):
             raise _ROIDataByteError("Invalid minute input")
             
         if noError:
-            self.SCI.send(self.config.data['opcodes']['set_day_time'], tuple(data))
+            self.SCI.send(self.config.data['opcodes']['set_day_time'], (data,))
         else:
             raise _ROIFailedToSendError("Invalid data, failed to send")
     
@@ -449,7 +449,7 @@ class _Create2(object):
         
         #Send it off if there were no errors.
         if noError:
-            self.SCI.send(self.config.data['opcodes']['motors_pwm'], tuple(data))
+            self.SCI.send(self.config.data['opcodes']['motors_pwm'], (data,))
         else:
             raise _ROIFailedToSendError("Invalid data, failed to send")
         
@@ -506,7 +506,7 @@ class _Create2(object):
                     warnings.formatwarning = custom_format_warning
                     warnings.warn("Warning: Char '" + display_string[i] + "' was not found in ascii table")
                 
-            self.SCI.send(self.config.data['opcodes']['digit_led_ascii'], tuple(display_list))
+            self.SCI.send(self.config.data['opcodes']['digit_led_ascii'], (display_list,))
         else:
             raise _ROIFailedToSendError("Invalid data, failed to send")
         
@@ -552,7 +552,7 @@ class _Create2(object):
         play_sequence = [val for sublist in play_sequence for val in sublist]
         
         if noError:
-            self.SCI.send(self.config.data['opcodes']['song'], tuple(play_sequence))
+            self.SCI.send(self.config.data['opcodes']['song'], (play_sequence,))
         else:
             raise _ROIFailedToSendError("Invalid data, failed to send")
             
@@ -570,7 +570,7 @@ class _Create2(object):
         play_list = [val for sublist in play_list for val in sublist]
 
         if noError:   
-            self.SCI.send(self.config.data['opcodes']['song'],tuple(play_list))
+            self.SCI.send(self.config.data['opcodes']['song'],(play_list,))
         else:
             raise _ROIFailedToSendError("Invalid data, failed to send")
 
@@ -580,7 +580,7 @@ class _Create2(object):
         noError = True
 
         if noError:
-            self.SCI.send(self.config.data['opcodes']['play'], tuple([song_number]))
+            self.SCI.send(self.config.data['opcodes']['play'], ([song_number],))
         else:
             raise _ROIFailedToSendError("Invalid data, failed to send")
             
@@ -655,7 +655,7 @@ class _Create2(object):
         if packet_id in self.config.data['sensor group packet lengths']:
             # Valid packet, send request (But convert it back to an int in a list first)
             packet_id = [int(packet_id)]
-            self.SCI.send(self.config.data['opcodes']['sensors'], tuple(packet_id))
+            self.SCI.send(self.config.data['opcodes']['sensors'], (packet_id,))
         else:
             raise _ROIFailedToSendError("Invalid packet id, failed to send")
         
